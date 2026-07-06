@@ -72,6 +72,60 @@ func disable_game():
 	$MarginContainer/VBoxContainer/EndTurnButton.disabled = true
 	$MarginContainer/VBoxContainer/TargetOption.disabled = true
 
+func enemy_attack():
+
+	log_message(
+	"[b]Enemy Turn[/b]\n" +
+	"Soldiers: " + str(enemy["soldiers"]) + "\n" +
+	"Archers: " + str(enemy["archers"]) + "\n" +
+	"Catapults: " + str(enemy["catapults"])
+)
+	if enemy["catapults"] > 0:
+		var damage = enemy["catapults"] * UNIT_STATS["catapults"]["dmg"]
+		player["castle_hp"] = max(0, player["castle_hp"] - damage)
+
+		log_message(
+			"[b]🏰 ENEMY ATTACK[/b]\n\n" +
+			"Enemy attacked your Castle.\n" +
+			"Your Castle took " + str(damage) + " damage."
+		)
+
+	elif enemy["soldiers"] > 0:
+		var enemy_damage = enemy["soldiers"] * UNIT_STATS["soldiers"]["dmg"]
+		var player_damage = player["soldiers"] * UNIT_STATS["soldiers"]["dmg"] * 0.8
+
+		var player_killed = min(player["soldiers"], units_killed(enemy_damage, "soldiers"))
+		var enemy_killed = min(enemy["soldiers"], units_killed(player_damage, "soldiers"))
+
+		player["soldiers"] -= player_killed
+		enemy["soldiers"] -= enemy_killed
+
+		log_message(
+			"[b]⚔ ENEMY ATTACK[/b]\n\n" +
+			"Enemy attacked your Soldiers.\n" +
+			"You lost " + str(player_killed) + " Soldiers.\n" +
+			"Enemy lost " + str(enemy_killed) + " Soldiers."
+		)
+
+	elif enemy["archers"] > 0:
+		var enemy_damage = enemy["archers"] * UNIT_STATS["archers"]["dmg"]
+		var player_damage = player["archers"] * UNIT_STATS["archers"]["dmg"] * 0.8
+
+		var player_killed = min(player["archers"], units_killed(enemy_damage, "archers"))
+		var enemy_killed = min(enemy["archers"], units_killed(player_damage, "archers"))
+
+		player["archers"] -= player_killed
+		enemy["archers"] -= enemy_killed
+
+		log_message(
+			"[b]🏹 ENEMY ATTACK[/b]\n\n" +
+			"Enemy attacked your Archers.\n" +
+			"You lost " + str(player_killed) + " Archers.\n" +
+			"Enemy lost " + str(enemy_killed) + " Archers."
+		)
+
+	update_ui()
+
 func recruit_soldier(target):
 	if target["gold"] >= 10:
 		target["gold"] -= 10
@@ -132,7 +186,9 @@ func enemy_turn():
 
 func _on_end_turn_button_pressed() -> void:
 	end_turn(player)
+
 	enemy_turn()
+	enemy_attack()
 
 	attacked_this_turn = false
 
