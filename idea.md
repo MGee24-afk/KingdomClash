@@ -6,7 +6,7 @@
 
 
 
-The project was inspired by classic turn-based strategy games such as Heroes of Might and Magic.
+The project was inspired by classic turn-based strategy games such as Heroes of Might and Magic. The project focuses on implementing interconnected gameplay systems rather than graphical complexity.
 
 
 
@@ -66,9 +66,7 @@ During development several challenges appeared:
 
 \- balancing combat mechanics,
 
-\- designing simple enemy AI,
-
-\- creating a clean user interface,
+\- designing interconnected gameplay systems.- creating a clean user interface,
 
 \- organizing the project with Git and GitHub.
 
